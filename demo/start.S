@@ -214,9 +214,10 @@ loop_init_bss:
     li a1, 3
     sw a1, 0(a0)
 
-#set divisor (104 = 12MHz / 115200)
+#set divisor (0x68 = 104 = 12MHz/115.2Kbps, 0x1b2 = 434 = 50MHz/115.2Kbps)
     lui a0, 0x02000
-    li a1, 0x68
+#    li a1, 0x68
+    li a1, 0x1b2
     sw a1, 0x10(a0)
 
     # Update LEDs
@@ -225,6 +226,7 @@ loop_init_bss:
     sw a1, 0(a0)
 
     /* set stack pointer */
+#    lui sp, 0x10800
     lui sp, 0x00014
 
     # Update LEDs
@@ -233,6 +235,8 @@ loop_init_bss:
     sw a1, 0(a0)
 
     /* set gp and tp */
+#    lui gp, %hi(0x10000800)
+#    addi gp, gp, %lo(0x10000800)
     lui gp, %hi(0x00010800)
     addi gp, gp, %lo(0x00010800)
     addi tp, gp, 0
