@@ -215,9 +215,11 @@ loop_init_bss:
     sw a1, 0(a0)
 
 #set divisor (0x68 = 104 = 12MHz/115.2Kbps, 0x1b2 = 434 = 50MHz/115.2Kbps)
+#            (0x364  = 868 = 100MHz/115.2Kbps) - 1
     lui a0, 0x02000
-#    li a1, 0x68
-    li a1, 0x1b2
+#    li a1, 0x67
+#    li a1, 0x1b1
+    li a1, 0x363
     sw a1, 0x10(a0)
 
     # Update LEDs
