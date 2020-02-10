@@ -2,8 +2,7 @@ ENTRY(reset_vec)
 
 MEMORY
 {
-    ROM (rx)      : ORIGIN = 0x00000000, LENGTH = 0x4000   /* 16 KB */
-    RAM (xrw)     : ORIGIN = 0x00010000, LENGTH = 0x4000   /* 16 KB */
+    ROM (rx)      : ORIGIN = 0x00000000, LENGTH = 0x8000   /* 32 KB */
     SDRAM (xrw)   : ORIGIN = 0x01000000, LENGTH = 0x800000 /*  8 MB */
 }
 
@@ -26,9 +25,9 @@ SECTIONS {
 
 
     /* This is the initialized data section
-    The program executes knowing that the data is in the RAM
+    The program executes knowing that the data is in the SDRAM
     but the loader puts the initial values in the ROM (inidata).
-    It is one task of the startup to copy the initial values from ROM to RAM. */
+    It is one task of the startup to copy the initial values from ROM to SDRAM. */
     .data : AT ( _sidata )
     {
         . = ALIGN(4);
