@@ -27,7 +27,7 @@ int main() {
         //print_hex((unsigned int)tmp, 2);
         command[command_len] = tmp;
 
-        if (tmp == '\r') {
+        if (tmp == '\r' || tmp == '\n') {
             command[command_len] = '\0';
             //print_str("new line\n");
             //print_str(command);

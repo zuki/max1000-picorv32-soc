@@ -29,26 +29,26 @@ module picorv32_axi_wrapper # (
     output coe_trap,
 
     // AXI4-lite master memory interface
-
+    // write address: master -> slave
     output        axm_awvalid,
     input         axm_awready,
     output [31:0] axm_awaddr,
     output [ 2:0] axm_awprot,
-
+    // write data: master -> slave
     output        axm_wvalid,
     input         axm_wready,
     output [31:0] axm_wdata,
     output [ 3:0] axm_wstrb,
-
+    // write: slave -> master
     input         axm_bvalid,
     input  [ 1:0] axm_bresp,
     output        axm_bready,
-
+    // read: master -> slave
     output        axm_arvalid,
     input         axm_arready,
     output [31:0] axm_araddr,
     output [ 2:0] axm_arprot,
-
+    // read: slave -> master
     input         axm_rvalid,
     input  [ 1:0] axm_rresp,
     output        axm_rready,

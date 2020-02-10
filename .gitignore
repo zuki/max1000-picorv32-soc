@@ -42,6 +42,7 @@
 !*.script
 !Makefile
 !*.inc
+!*.lds
 #########
 #document files
 #########

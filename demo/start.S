@@ -226,8 +226,11 @@ loop_init_bss:
     sw a1, 0(a0)
 
     /* set stack pointer */
-#    lui sp, 0x10800
-    lui sp, 0x00014
+#    lui sp, 0x01800
+#    lui sp, 0x00014
+    lui sp, %hi(_stack_pointer)
+    addi sp, sp, %lo(_stack_pointer)
+
 
     # Update LEDs
     li a0, 0x03000000
@@ -235,10 +238,12 @@ loop_init_bss:
     sw a1, 0(a0)
 
     /* set gp and tp */
-#    lui gp, %hi(0x10000800)
-#    addi gp, gp, %lo(0x10000800)
-    lui gp, %hi(0x00010800)
-    addi gp, gp, %lo(0x00010800)
+#    lui gp, %hi(0x01000800)
+#    addi gp, gp, %lo(0x01000800)
+#    lui gp, %hi(0x00010800)
+#    addi gp, gp, %lo(0x00010800)
+    lui gp, %hi(_sdata+0x800)
+    addi gp, gp, %lo(_sdata+0x800)
     addi tp, gp, 0
 
     # Update LEDs
