@@ -165,7 +165,7 @@
   <parameter name="width" value="8" />
  </module>
  <module name="pico_riscv_0" kind="pico_riscv" version="1.0" enabled="1">
-  <parameter name="AUTO_INTERRUPT_RECEIVER_0_INTERRUPTS_USED" value="1" />
+  <parameter name="AUTO_INTERRUPT_RECEIVER_0_INTERRUPTS_USED" value="8" />
   <parameter name="BARREL_SHIFTER" value="0" />
   <parameter name="CATCH_ILLINSN" value="1" />
   <parameter name="CATCH_MISALIGN" value="1" />
@@ -187,7 +187,7 @@
   <parameter name="PROGADDR_IRQ" value="16" />
   <parameter name="PROGADDR_RESET" value="0" />
   <parameter name="REGS_INIT_ZERO" value="0" />
-  <parameter name="STACKADDR" value="4294967295" />
+  <parameter name="STACKADDR" value="25165824" />
   <parameter name="TWO_CYCLE_ALU" value="0" />
   <parameter name="TWO_CYCLE_COMPARE" value="0" />
   <parameter name="TWO_STAGE_SHIFT" value="1" />
@@ -361,7 +361,7 @@
    version="18.1"
    start="pico_riscv_0.interrupt_receiver_0"
    end="uart_0.irq">
-  <parameter name="irqNumber" value="0" />
+  <parameter name="irqNumber" value="3" />
  </connection>
  <connection
    kind="reset"

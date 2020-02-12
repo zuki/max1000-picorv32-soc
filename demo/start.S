@@ -6,34 +6,38 @@
 
 reset_vec:
     // no more than 16 bytes here
+    //picorv32_waitirq_insn(zero)
+	picorv32_maskirq_insn(zero, zero)
     j _start
 
 
-/* Interrupt handler
+/* 割り込みハンドラ
+ *    ENABLE_QREGS = 1 を仮定
  **********************************/
 
 .balign 16
 irq_vec:
 
-    /* save registers */
-    picorv32_setq_insn(q2, x1)
-    picorv32_setq_insn(q3, x2)
+    /* 現在のレジスタを保存 */
+    picorv32_setq_insn(q2, x1)  // return address
+    picorv32_setq_insn(q3, x2)  // stack pointer
 
-    // interrupt off
-    addi x1, zero, -1
-    picorv32_maskirq_insn(zero, x1)
+    // 割込オフ
+    //addi x1, zero, -1
+    //picorv32_maskirq_insn(zero, x1)
 
     lui x1, %hi(irq_regs)
     addi x1, x1, %lo(irq_regs)
 
+    // 割込時のプログラムカウンタをirq_regs[0]に保存
     picorv32_getq_insn(x2, q0)
     sw x2,   0*4(x1)
-
+    // 割込時のリターンアドレスをirq_reg[1]に保存
     picorv32_getq_insn(x2, q2)
     sw x2,   1*4(x1)
 
-    picorv32_getq_insn(x2, q3)
-    sw x2,   2*4(x1)
+    picorv32_getq_insn(x2, q3)  // 割込時のスタックポインタをirq_reg[2]に保存
+    sw x2,   2*4(x1)            // 各レジスタをirq_regに保存
     sw x3,   3*4(x1)
     sw x4,   4*4(x1)
     sw x5,   5*4(x1)
@@ -64,34 +68,35 @@ irq_vec:
     sw x30, 30*4(x1)
     sw x31, 31*4(x1)
 
-
-    /* call interrupt handler C function */
-
+    /* C関数である割り込みハンドラを呼び出す */
+    // スタックを割込処理用のスタックにする
     lui sp, %hi(irq_stack)
     addi sp, sp, %lo(irq_stack)
 
-    // arg0 = address of regs
+    // arg0 = レジスタの先頭アドレス
     lui a0, %hi(irq_regs)
     addi a0, a0, %lo(irq_regs)
 
-    // arg1 = interrupt type
+    // arg1 = 割込タイプ（複数の場合あり）
     picorv32_getq_insn(a1, q1)
 
-
-    // call to C function
+    // 実際のC関数の呼び出し
     jal ra, irq
 
-    /* restore registers */
+    /*======================================*/
+    /* 割込処理が終了。レジスタを戻す       */
+    /*======================================*/
 
-    // new irq_regs address returned from C code in a0
+    // 新たな irq_regs アドレスはC関数からa0で返される
     addi x1, a0, 0
 
+    // q0（割込時のプログラムカウンタ）を戻す
     lw x2,   0*4(x1)
     picorv32_setq_insn(q0, x2)
-
+    // 割込時のリターンアドレスをq1に一時保管
     lw x2,   1*4(x1)
     picorv32_setq_insn(q1, x2)
-
+    // 割込時のスタックポインタをq2に一時保管
     lw x2,   2*4(x1)
     picorv32_setq_insn(q2, x2)
 
@@ -125,14 +130,15 @@ irq_vec:
     lw x30, 30*4(x1)
     lw x31, 31*4(x1)
 
-    #set timer
+    # タイマーの設定
     lui x1, 1000;
     picorv32_timer_insn(zero, x1);
 
+    // リターンアドレスとスタックポインタを戻す
     picorv32_getq_insn(x1, q1)
     picorv32_getq_insn(x2, q2)
 
-    // interrupt on
+    // 割込オン
     picorv32_maskirq_insn(zero, zero)
     picorv32_retirq_insn()
 
@@ -262,8 +268,8 @@ loop_init_bss:
     li a1, 7
     sw a1, 0(a0)
 
-#set timer
-    lui x1, 1000
+#disenable timer
+    lui x1, 0
     picorv32_timer_insn(zero, x1);
 
     # Update LEDs
@@ -272,13 +278,13 @@ loop_init_bss:
     sw a1, 0(a0)
 
     // interrupt off
-    addi x1, zero, -1
-    picorv32_maskirq_insn(zero, x1)
+    //addi x1, zero, -1
+    //picorv32_maskirq_insn(zero, x1)
 
     # Update LEDs
-    li a0, 0x03000000
-    li a1, 9
-    sw a1, 0(a0)
+    //li a0, 0x03000000
+    //li a1, 9
+    //sw a1, 0(a0)
 
     j   main                # jump to main
 
@@ -286,10 +292,10 @@ loop_init_bss:
     .balign 4
     .section .data
 irq_regs:
-    // registers are saved to this memory region during interrupt handling
-    // the program counter is saved as register 0
+    // 割込処理時にここにレジスタを保存する
+    // プログラムカウンタはレジスタ０に保存される
     .fill 32,4
 
-    // stack for the interrupt handler
+    // 割込書利用のスタック領域
     .fill 128,4
 irq_stack:

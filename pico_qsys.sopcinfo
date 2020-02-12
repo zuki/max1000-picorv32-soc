@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="pico_qsys" kind="pico_qsys" version="1.0" fabric="QSYS">
  <!-- Format version 18.1 625 (Future versions may contain additional information.) -->
- <!-- 2020.02.10.17:27:49 -->
+ <!-- 2020.02.12.15:58:49 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1581323268</value>
+  <value>1581490728</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -1404,7 +1404,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="STACKADDR">
    <type>java.math.BigInteger</type>
-   <value>4294967295</value>
+   <value>25165824</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -1412,7 +1412,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="AUTO_INTERRUPT_RECEIVER_0_INTERRUPTS_USED">
    <type>java.math.BigInteger</type>
-   <value>1</value>
+   <value>8</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -1644,7 +1644,7 @@ parameters are a RESULT of the module parameters. -->
     <moduleName>uart_0</moduleName>
     <slaveName>irq</slaveName>
     <name>uart_0.irq</name>
-    <interruptNumber>0</interruptNumber>
+    <interruptNumber>3</interruptNumber>
    </interrupt>
   </interface>
   <interface
@@ -5831,7 +5831,7 @@ parameters are a RESULT of the module parameters. -->
    end="uart_0.irq">
   <parameter name="irqNumber">
    <type>int</type>
-   <value>0</value>
+   <value>3</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
