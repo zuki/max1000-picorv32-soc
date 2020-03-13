@@ -55,6 +55,7 @@
 !*.jpg
 
 db/
+pico_qsys/
 *.hex
 *_inst.v
 software/add/
