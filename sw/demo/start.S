@@ -22,7 +22,7 @@ irq_vec:
     picorv32_setq_insn(q2, x1)  // return address
     picorv32_setq_insn(q3, x2)  // stack pointer
 
-    // 割込オフ
+    // 割込禁止
     //addi x1, zero, -1
     //picorv32_maskirq_insn(zero, x1)
 
