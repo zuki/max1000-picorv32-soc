@@ -109,7 +109,7 @@ module picorv32_axi_wrapper # (
         .mem_axi_rvalid (axm_rvalid ),
         .mem_axi_rready (axm_rready ),
         .mem_axi_rdata  (axm_rdata  ),
-        .irq            (ins_irq            )
+        .irq            (inr_irq            )
 
 //        .trace_valid    (coe_trace_valid    ),
 //        .trace_data     (coe_trace_data     )
