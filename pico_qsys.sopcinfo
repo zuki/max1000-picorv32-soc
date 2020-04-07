@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="pico_qsys" kind="pico_qsys" version="1.0" fabric="QSYS">
  <!-- Format version 18.1 625 (Future versions may contain additional information.) -->
- <!-- 2020.04.07.10:11:07 -->
+ <!-- 2020.04.07.12:03:55 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1586221867</value>
+  <value>1586228635</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -350,9 +350,9 @@ parameters are a RESULT of the module parameters. -->
    </clockDomainMember>
    <clockDomainMember>
     <isBridge>false</isBridge>
-    <moduleName>rom</moduleName>
+    <moduleName>ram_0</moduleName>
     <slaveName>clk1</slaveName>
-    <name>rom.clk1</name>
+    <name>ram_0.clk1</name>
    </clockDomainMember>
    <clockDomainMember>
     <isBridge>false</isBridge>
@@ -1870,9 +1870,9 @@ parameters are a RESULT of the module parameters. -->
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>rom</moduleName>
+    <moduleName>ram_0</moduleName>
     <slaveName>s1</slaveName>
-    <name>rom.s1</name>
+    <name>ram_0.s1</name>
     <baseAddress>0</baseAddress>
     <span>32768</span>
    </memoryBlock>
@@ -1887,10 +1887,10 @@ parameters are a RESULT of the module parameters. -->
   </interface>
  </module>
  <module
-   name="rom"
+   name="ram_0"
    kind="altera_avalon_onchip_memory2"
    version="18.1"
-   path="rom">
+   path="ram_0">
   <!-- Describes a single module. Module parameters are
 the requested settings for a module instance. -->
   <assignment>
@@ -1951,7 +1951,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.WRITABLE</name>
-   <value>0</value>
+   <value>1</value>
   </assignment>
   <assignment>
    <name>embeddedsw.memoryInfo.DAT_SYM_INSTALL_DIR</name>
@@ -2167,7 +2167,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="writable">
    <type>boolean</type>
-   <value>false</value>
+   <value>true</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -2191,7 +2191,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="autoInitializationFileName">
    <type>java.lang.String</type>
-   <value>pico_qsys_rom</value>
+   <value>pico_qsys_ram_0</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -2339,7 +2339,7 @@ parameters are a RESULT of the module parameters. -->
    </assignment>
    <assignment>
     <name>embeddedsw.configuration.isNonVolatileStorage</name>
-    <value>1</value>
+    <value>0</value>
    </assignment>
    <assignment>
     <name>embeddedsw.configuration.isPrintableDevice</name>
@@ -2499,7 +2499,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="isNonVolatileStorage">
     <type>boolean</type>
-    <value>true</value>
+    <value>false</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -2664,12 +2664,6 @@ parameters are a RESULT of the module parameters. -->
     <direction>Input</direction>
     <width>13</width>
     <role>address</role>
-   </port>
-   <port>
-    <name>debugaccess</name>
-    <direction>Input</direction>
-    <width>1</width>
-    <role>debugaccess</role>
    </port>
    <port>
     <name>clken</name>
@@ -4627,11 +4621,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>s1</endConnectionPoint>
  </connection>
  <connection
-   name="pico_riscv_0.altera_axi4lite_master/rom.s1"
+   name="pico_riscv_0.altera_axi4lite_master/ram_0.s1"
    kind="avalon"
    version="18.1"
    start="pico_riscv_0.altera_axi4lite_master"
-   end="rom.s1">
+   end="ram_0.s1">
   <parameter name="arbitrationPriority">
    <type>int</type>
    <value>1</value>
@@ -4674,7 +4668,7 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>pico_riscv_0</startModule>
   <startConnectionPoint>altera_axi4lite_master</startConnectionPoint>
-  <endModule>rom</endModule>
+  <endModule>ram_0</endModule>
   <endConnectionPoint>s1</endConnectionPoint>
  </connection>
  <connection
@@ -4810,11 +4804,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>clk</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk/rom.clk1"
+   name="clk_0.clk/ram_0.clk1"
    kind="clock"
    version="18.1"
    start="clk_0.clk"
-   end="rom.clk1">
+   end="ram_0.clk1">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -4833,7 +4827,7 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk</startConnectionPoint>
-  <endModule>rom</endModule>
+  <endModule>ram_0</endModule>
   <endConnectionPoint>clk1</endConnectionPoint>
  </connection>
  <connection
@@ -5007,11 +5001,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>reset</endConnectionPoint>
  </connection>
  <connection
-   name="clk_0.clk_reset/rom.reset1"
+   name="clk_0.clk_reset/ram_0.reset1"
    kind="reset"
    version="18.1"
    start="clk_0.clk_reset"
-   end="rom.reset1">
+   end="ram_0.reset1">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -5030,7 +5024,7 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>clk_0</startModule>
   <startConnectionPoint>clk_reset</startConnectionPoint>
-  <endModule>rom</endModule>
+  <endModule>ram_0</endModule>
   <endConnectionPoint>reset1</endConnectionPoint>
  </connection>
  <plugin>

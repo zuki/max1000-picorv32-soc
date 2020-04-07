@@ -2,7 +2,7 @@ ENTRY(reset_vec)
 
 MEMORY
 {
-    ROM (rx)      : ORIGIN = 0x00000000, LENGTH = 0x8000   /* 32 KB */
+    RAM (rwx)     : ORIGIN = 0x00000000, LENGTH = 0x8000   /* 32 KB */
     SDRAM (xrw)   : ORIGIN = 0x01000000, LENGTH = 0x800000 /*  8 MB */
 }
 
@@ -21,14 +21,14 @@ SECTIONS {
         . = ALIGN(4);
         _etext = .;        /* define a global symbol at end of code */
         _sidata = _etext;  /* This is used by the startup in order to initialize the .data secion */
-    } >ROM
+    } >RAM
 
 
     /* This is the initialized data section
     The program executes knowing that the data is in the SDRAM
     but the loader puts the initial values in the ROM (inidata).
     It is one task of the startup to copy the initial values from ROM to SDRAM. */
-    .data : AT ( _sidata )
+    .data :
     {
         . = ALIGN(4);
         _sdata = ABSOLUTE(.);  /* create a global symbol at data start; used by startup code in order to initialise the .data section in RAM */
@@ -40,7 +40,7 @@ SECTIONS {
         *(.sdata*)          /* .sdata* sections */
         . = ALIGN(4);
         _edata = ABSOLUTE(.);        /* define a global symbol at data end; used by startup code in order to initialise the .data section in RAM */
-    } > SDRAM
+    } > RAM
 
     /* Uninitialized data section */
     .bss :
@@ -55,20 +55,13 @@ SECTIONS {
 
         . = ALIGN(4);
         _ebss = ABSOLUTE(.);         /* define a global symbol at bss end; used by startup code */
-    } > SDRAM
+    } > RAM
 
-    /* this is to define the start of the heap, and make sure we have a minimum size */
-    .sdram :
-    {
-        . = ALIGN(4);
-        _end = ABSOLUTE(.);
-        end = ABSOLUTE(.);
-        _stack_base = ABSOLUTE(.);
-    } > SDRAM
+    .stack : {
+      _data_end = ORIGIN(RAM)+LENGTH(RAM);
+      . = _data_end - 4;
+      _stack_pointer = .;
+      __C_STACK_TOP__ = .;
+    } > RAM
 
-    _data_end = ORIGIN(SDRAM)+LENGTH(SDRAM);
-    PROVIDE(_stack_pointer = _data_end);
-    PROVIDE(_stack_limit   = _stack_base);
-    PROVIDE(_heap_start    = end);
-    PROVIDE(_heap_limit    = _data_end);
 }

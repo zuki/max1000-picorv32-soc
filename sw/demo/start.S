@@ -187,6 +187,7 @@ _start:
     li a1, 1
     sw a1, 0(a0)
 
+/* Do not need copy data because of RAM
 # copy data section
     la a0, _sidata
     la a1, _sdata
@@ -205,6 +206,7 @@ end_init_data:
     li a0, 0x03000000
     li a1, 2
     sw a1, 0(a0)
+*/
 
 # zero-init bss section
     la a0, _sbss

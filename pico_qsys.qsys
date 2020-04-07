@@ -73,7 +73,7 @@
          type = "String";
       }
    }
-   element rom
+   element ram_0
    {
       datum _sortIndex
       {
@@ -81,7 +81,7 @@
          type = "int";
       }
    }
-   element rom.s1
+   element ram_0.s1
    {
       datum baseAddress
       {
@@ -241,12 +241,12 @@
   <parameter name="writable" value="true" />
  </module>
  <module
-   name="rom"
+   name="ram_0"
    kind="altera_avalon_onchip_memory2"
    version="18.1"
    enabled="1">
   <parameter name="allowInSystemMemoryContentEditor" value="true" />
-  <parameter name="autoInitializationFileName" value="$${FILENAME}_rom" />
+  <parameter name="autoInitializationFileName" value="$${FILENAME}_ram_0" />
   <parameter name="blockType" value="AUTO" />
   <parameter name="copyInitFile" value="false" />
   <parameter name="dataWidth" value="32" />
@@ -270,7 +270,7 @@
   <parameter name="slave2Latency" value="1" />
   <parameter name="useNonDefaultInitFile" value="true" />
   <parameter name="useShallowMemBlocks" value="false" />
-  <parameter name="writable" value="false" />
+  <parameter name="writable" value="true" />
  </module>
  <module
    name="sdram_0"
@@ -348,7 +348,7 @@
    kind="avalon"
    version="18.1"
    start="pico_riscv_0.altera_axi4lite_master"
-   end="rom.s1">
+   end="ram_0.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
   <parameter name="defaultConnection" value="false" />
@@ -365,7 +365,7 @@
  <connection kind="clock" version="18.1" start="clk_0.clk" end="uart_0.clk" />
  <connection kind="clock" version="18.1" start="clk_0.clk" end="led.clk" />
  <connection kind="clock" version="18.1" start="clk_0.clk" end="sdram_0.clk" />
- <connection kind="clock" version="18.1" start="clk_0.clk" end="rom.clk1" />
+ <connection kind="clock" version="18.1" start="clk_0.clk" end="ram_0.clk1" />
  <connection kind="clock" version="18.1" start="clk_0.clk" end="ram.clk1" />
  <connection
    kind="clock"
@@ -395,7 +395,11 @@
    version="18.1"
    start="clk_0.clk_reset"
    end="sdram_0.reset" />
- <connection kind="reset" version="18.1" start="clk_0.clk_reset" end="rom.reset1" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="clk_0.clk_reset"
+   end="ram_0.reset1" />
  <connection kind="reset" version="18.1" start="clk_0.clk_reset" end="ram.reset1" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.enableEccProtection" value="FALSE" />
