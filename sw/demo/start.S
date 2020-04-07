@@ -7,7 +7,8 @@
 reset_vec:
     // no more than 16 bytes here
     //picorv32_waitirq_insn(zero)
-	picorv32_maskirq_insn(zero, zero)
+    addi x1, zero, -1
+	  picorv32_maskirq_insn(zero, x1)
     j _start
 
 
@@ -22,7 +23,7 @@ irq_vec:
     picorv32_setq_insn(q2, x1)  // return address
     picorv32_setq_insn(q3, x2)  // stack pointer
 
-    // 割込禁止
+    // 割込オフ
     //addi x1, zero, -1
     //picorv32_maskirq_insn(zero, x1)
 
@@ -260,7 +261,7 @@ loop_init_bss:
     sw a1, 0(a0)
 
 
-#set irq_mask
+#enable alll interrupts
     picorv32_maskirq_insn(zero, zero)
 
     # Update LEDs
@@ -296,6 +297,6 @@ irq_regs:
     // プログラムカウンタはレジスタ０に保存される
     .fill 32,4
 
-    // 割込書利用のスタック領域
+    // 割込処理用のスタック領域
     .fill 128,4
 irq_stack:

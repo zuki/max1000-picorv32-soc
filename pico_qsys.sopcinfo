@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="pico_qsys" kind="pico_qsys" version="1.0" fabric="QSYS">
  <!-- Format version 18.1 625 (Future versions may contain additional information.) -->
- <!-- 2020.03.17.10:56:10 -->
+ <!-- 2020.04.07.10:11:07 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1584410169</value>
+  <value>1586221867</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -1895,7 +1895,7 @@ parameters are a RESULT of the module parameters. -->
 the requested settings for a module instance. -->
   <assignment>
    <name>embeddedsw.CMacro.ALLOW_IN_SYSTEM_MEMORY_CONTENT_EDITOR</name>
-   <value>0</value>
+   <value>1</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.ALLOW_MRAM_SIM_CONTENTS_ONLY_FILE</name>
@@ -1923,7 +1923,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.INSTANCE_ID</name>
-   <value>NONE</value>
+   <value>hex</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.NON_DEFAULT_INIT_FILE_ENABLED</name>
@@ -1991,7 +1991,7 @@ the requested settings for a module instance. -->
   </assignment>
   <parameter name="allowInSystemMemoryContentEditor">
    <type>boolean</type>
-   <value>false</value>
+   <value>true</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -2055,7 +2055,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="initializationFileName">
    <type>java.lang.String</type>
-   <value>firmware.hex</value>
+   <value>/home/vagrant/develop/riscv/picocpu/firmware.hex</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -2071,9 +2071,9 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="instanceID">
    <type>java.lang.String</type>
-   <value>NONE</value>
+   <value>hex</value>
    <derived>false</derived>
-   <enabled>false</enabled>
+   <enabled>true</enabled>
    <visible>true</visible>
    <valid>true</valid>
   </parameter>
@@ -2266,7 +2266,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="derived_init_file_name">
    <type>java.lang.String</type>
-   <value>firmware.hex</value>
+   <value>/home/vagrant/develop/riscv/picocpu/firmware.hex</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
