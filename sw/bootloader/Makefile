@@ -11,7 +11,7 @@ apps = bootloader
 
 ld-script?=bootloader.ld
 
-FLAGS_MARCH ?= rv32i
+FLAGS_MARCH ?= rv32im
 FLAGS_MABI ?= ilp32
 
 #CROSS_PATH ?=/usr/local/riscv32im/bin
@@ -71,7 +71,7 @@ $(apps_txt): $(build_dir)/%.txt: $(build_dir)/%.bin
 
 $(apps_hex): $(build_dir)/%.hex: $(build_dir)/%.txt
 	python3 ${COMMON_PATH}/txt2hex.py $< $@ 4
-	cp $@ ${FPGA_PROJECT_PATH}/firmware.hex
+	cp $@ ${FPGA_PROJECT_PATH}/
 
 riscv: $(apps_elf)
 

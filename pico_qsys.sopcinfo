@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="pico_qsys" kind="pico_qsys" version="1.0" fabric="QSYS">
  <!-- Format version 18.1 625 (Future versions may contain additional information.) -->
- <!-- 2020.04.07.12:03:55 -->
+ <!-- 2020.04.09.15:53:12 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1586228635</value>
+  <value>1586415191</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -1406,7 +1406,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="AUTO_INTERRUPT_RECEIVER_0_INTERRUPTS_USED">
    <type>java.math.BigInteger</type>
-   <value>8</value>
+   <value>1</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -1638,7 +1638,7 @@ parameters are a RESULT of the module parameters. -->
     <moduleName>uart_0</moduleName>
     <slaveName>irq</slaveName>
     <name>uart_0.irq</name>
-    <interruptNumber>3</interruptNumber>
+    <interruptNumber>0</interruptNumber>
    </interrupt>
   </interface>
   <interface
@@ -1895,7 +1895,7 @@ parameters are a RESULT of the module parameters. -->
 the requested settings for a module instance. -->
   <assignment>
    <name>embeddedsw.CMacro.ALLOW_IN_SYSTEM_MEMORY_CONTENT_EDITOR</name>
-   <value>1</value>
+   <value>0</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.ALLOW_MRAM_SIM_CONTENTS_ONLY_FILE</name>
@@ -1915,7 +1915,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.INIT_CONTENTS_FILE</name>
-   <value>firmware</value>
+   <value>bootloader</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.INIT_MEM_CONTENT</name>
@@ -1923,7 +1923,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.INSTANCE_ID</name>
-   <value>hex</value>
+   <value>NONE</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.NON_DEFAULT_INIT_FILE_ENABLED</name>
@@ -1979,7 +1979,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.memoryInfo.MEM_INIT_FILENAME</name>
-   <value>firmware</value>
+   <value>bootloader</value>
   </assignment>
   <assignment>
    <name>postgeneration.simulation.init_file.param_name</name>
@@ -1991,7 +1991,7 @@ the requested settings for a module instance. -->
   </assignment>
   <parameter name="allowInSystemMemoryContentEditor">
    <type>boolean</type>
-   <value>true</value>
+   <value>false</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -2055,7 +2055,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="initializationFileName">
    <type>java.lang.String</type>
-   <value>/home/vagrant/develop/riscv/picocpu/firmware.hex</value>
+   <value>/home/vagrant/develop/riscv/picorv32-soc/bootloader.hex</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -2071,9 +2071,9 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="instanceID">
    <type>java.lang.String</type>
-   <value>hex</value>
+   <value>NONE</value>
    <derived>false</derived>
-   <enabled>true</enabled>
+   <enabled>false</enabled>
    <visible>true</visible>
    <valid>true</valid>
   </parameter>
@@ -2266,7 +2266,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="derived_init_file_name">
    <type>java.lang.String</type>
-   <value>/home/vagrant/develop/riscv/picocpu/firmware.hex</value>
+   <value>/home/vagrant/develop/riscv/picorv32-soc/bootloader.hex</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -4865,7 +4865,7 @@ parameters are a RESULT of the module parameters. -->
    end="uart_0.irq">
   <parameter name="irqNumber">
    <type>int</type>
-   <value>3</value>
+   <value>0</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>

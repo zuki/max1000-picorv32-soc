@@ -18,7 +18,7 @@ OBJCOPY = $(CROSS_PREFIX)objcopy
 SIZE = $(CROSS_PREFIX)size
 
 SYS_CLK ?= 50000000
-MARCH ?= rv32i
+MARCH ?= rv32im
 MABI  ?= ilp32
 
 OPT ?= 2
