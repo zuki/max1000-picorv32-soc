@@ -1,18 +1,17 @@
+/// Syntacore SCR* infra
+///
+/// @copyright (C) Syntacore 2015-2016. All rights reserved.
+/// @author mn-sc
+///
+/// @brief tiny xmodem loader
+
 #ifndef XMODEM_H
 #define XMODEM_H
 
 #include <stdint.h>
 
-#define XMODEM_SOH  0x01
-#define XMODEM_STX  0x02
-#define XMODEM_EOT  0x04
-#define XMODEM_ACK  0x06
-#define XMODEM_NAK  0x15
-#define XMODEM_CAN  0x18
-#define XMODEM_EOF  0x1a  /* Ctrl-Z */
+#define MAX_XMODEM_RX_LEN (8*1024*1024)
 
-#define XMODEM_BLOCK_SIZE 128
-
-int xmodem_receive(uint8_t *);
+int xmodem_receive(uint8_t *buf, unsigned buf_sz);
 
 #endif // XMODEM_H

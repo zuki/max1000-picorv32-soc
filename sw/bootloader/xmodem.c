@@ -1,85 +1,178 @@
-#include <stdint.h>
-#include "uart.h"
+/// Syntacore SCR* infra
+///
+/// @copyright (C) Syntacore 2015-2017. All rights reserved.
+/// @author mn-sc
+///
+/// @brief tiny xmodem loader
+
+#include "bootloader.h"
 #include "xmodem.h"
+#include "uart.h"
+#include "crc.h"
 
-/* 受信開始されるまで送信要求を出す */
-static int xmodem_wait(void)
+#define SOH  0x01
+#define STX  0x02
+#define EOT  0x04
+#define ACK  0x06
+#define NAK  0x15
+#define CAN  0x18
+#define CTRLZ 0x1A
+
+#define DLY_1S 1000
+#define MAXRETRANS 25
+
+static inline int _inbyte(unsigned timeout_msec)
 {
-  int cnt = 0;
+    int c;
+    unsigned delay = timeout_msec << 7;
+    do {
+        c = uart_getc_nowait();
+        if (c < 0) {
+            delay_us(10);
+            if (timeout_msec && !delay) {
+                c = -2;
+                break;
+            }
+            --delay;
+        }
+    } while (c < 0);
 
-  while (!uart_rx_ready()) {
-    if (++cnt >= 2000000) {
-      cnt = 0;
-      uart_putc(XMODEM_NAK);
-    }
-  }
-
-  return 0;
+    return c;
 }
 
-/* ブロック単位での受信 */
-static int xmodem_read_block(uint8_t block_number, uint8_t *buf)
+static inline void _outbyte(int c)
 {
-  uint8_t   c, bn, check_sum = 0;
-  int i;
-
-  bn = (uint8_t)uart_getc();
-  if (bn != block_number)
-    return -1;
-
-  bn ^= (uint8_t)uart_getc();
-  if (bn != 0xff)
-    return -1;
-
-  for (i = 0; i < XMODEM_BLOCK_SIZE; i++) {
-    c = (uint8_t)uart_getc();
-    *(buf++) = c;
-    check_sum += c;
-  }
-
-  check_sum ^= (uint8_t)uart_getc();
-  if (check_sum)
-    return -1;
-
-  return i;
+    uart_putc(c);
 }
 
-int xmodem_receive(uint8_t *buf)
+static void flushinput(void)
 {
-  int r, receiving = 0;
-  int size = 0;
-  uint8_t   c, block_number = 1;
-  uint8_t   trychar = 'C';
+    while (_inbyte(DLY_1S) >= 0);
+}
 
-  while (1) {
-    if (!receiving) {
-        uart_putc(trychar);
-        xmodem_wait(); /* 受信開始されるまで送信要求を出す */
+static void xmodem_send_can(void)
+{
+    _outbyte(CAN);
+    _outbyte(CAN);
+    _outbyte(CAN);
+    flushinput();
+}
+
+int xmodem_receive(uint8_t *dest, unsigned destsz)
+{
+    int bufsz/*, crc = 0*/;
+    unsigned char trychar = 'C';
+    int c;
+
+    uint8_t *buf = dest;
+    uint16_t partial_crc;
+    uint8_t seq[2];
+    uint8_t seqnum = 1;
+    uint16_t buf_crc;
+    int pktsize;
+    int rxsize;
+
+    int totalbytes = 0;
+
+    int retry = MAXRETRANS;
+
+    for (;;) {
+        // wait for control byte
+        while (1) {
+            if (trychar) _outbyte(trychar);
+            if ((c = _inbyte((DLY_1S)*3/2)) >= 0) {
+                switch (c) {
+                case SOH:
+                    pktsize = bufsz = 128;
+                    partial_crc = 0;
+                    rxsize = -2;
+                    goto start_recv;
+                case STX:
+                    pktsize = bufsz = 1024;
+                    partial_crc = 0;
+                    rxsize = -2;
+                    goto start_recv;
+                /* case 0x3: */
+                /*     return -2; // ^C pressed */
+                case EOT:
+                    if (!totalbytes) // ^D pressed
+                        return -2;
+                    // transmition done
+                    // send ACK and finish
+                    _outbyte(ACK);
+                    flushinput();
+                    return totalbytes;
+                case CAN:
+                    // transmition cancelled by remote host
+                    if ((c = _inbyte(DLY_1S)) == CAN) {
+                        _outbyte(ACK);
+                        flushinput();
+                        return -1;
+                    }
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+
+    start_recv:
+        /* if (trychar == 'C') crc = 1; */
+        trychar = 0;
+        // receive packet
+        while (1) {
+            c = _inbyte(DLY_1S);
+            if (c < 0) {
+                _outbyte(NAK);
+                flushinput();
+                break;
+            }
+            if (rxsize < 0) {
+                seq[2 + rxsize] = c;
+            } else if (rxsize < pktsize) {
+                if (totalbytes + pktsize <= destsz)
+                    buf[rxsize] = c;
+                partial_crc = crc16_ccitt_update(partial_crc, c);
+            } else if (rxsize == pktsize) {
+                buf_crc = (c & 0xff) << 8;
+            } else {
+                // last crc byte
+                buf_crc |= c & 0xff;
+
+                if (seq[0] != (uint8_t)~seq[1]) {
+                    // integrity error
+                    _outbyte(NAK);
+                    flushinput();
+                    break;
+                } else if (buf_crc != partial_crc) {
+                    // CRC error
+                    _outbyte(NAK);
+                    flushinput();
+                    break;
+                } else if (seqnum == seq[0] + 1) {
+                    // retransmission of the last packet
+                    // ignore it
+                    if (--retry <= 0) {
+                        // too many retry error
+                        xmodem_send_can();
+                        return -3;
+                    }
+                    _outbyte(ACK);
+                    break;
+                } else if (seqnum == seq[0]) {
+                    ++seqnum;
+                    buf += pktsize;
+                    totalbytes += pktsize;
+                    retry = MAXRETRANS; // reset retries
+                    _outbyte(ACK);
+                    break;
+                } else {
+                    // out of sync
+                    xmodem_send_can();
+                    return -2;
+                }
+            }
+            ++rxsize;
+        }
     }
-
-    c = (uint8_t)uart_getc();
-
-    if (c == XMODEM_EOT) { /* 受信終了 */
-      uart_putc(XMODEM_ACK);
-      break;
-    } else if (c == XMODEM_CAN) { /* 受信中断 */
-      return -1;
-    } else if (c == XMODEM_SOH) { /* 受信開始 */
-      receiving++;
-      r = xmodem_read_block(block_number, buf); /* ブロック単位での受信 */
-      if (r < 0) {  /* 受信エラー */
-        uart_putc(XMODEM_NAK);
-      } else {      /* 正常受信 */
-        block_number++;
-        size += r;
-        buf  += r;
-        uart_putc(XMODEM_ACK);
-      }
-    } else {
-      if (receiving)
-        return -1;
-    }
-  }
-
-  return size;
 }

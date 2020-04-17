@@ -38,7 +38,8 @@ void dump_mem(uintptr_t addr, unsigned len)
 
 static void cmd_xload(void *arg)
 {
-    int st = xmodem_receive((uint8_t *)arg);
+    //int st = xmodem_receive((uint8_t *)arg);
+    int st = xmodem_receive((uint8_t *)arg, MAX_XMODEM_RX_LEN);
 
     while (uart_getc_nowait() >= 0);
 
